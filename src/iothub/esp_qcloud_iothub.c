@@ -528,7 +528,7 @@ esp_err_t esp_qcloud_iothub_report_device_info(void)
     cJSON_AddStringToObject(data_json, "mac", (const char *)&mac_str);
 
     /*You can add custom information, which will be displayed in the expanded information section of the QCloud*/
-    cJSON_AddStringToObject(device_label, "manufacturer", "ESPRESSIF");
+    cJSON_AddStringToObject(device_label, "manufacturer", CONFIG_LWIP_LOCAL_HOSTNAME);
     /*No need to delete when using <cJSON_AddItemToObject>*/
     cJSON_AddItemToObject(data_json, "device_label", device_label);
 
