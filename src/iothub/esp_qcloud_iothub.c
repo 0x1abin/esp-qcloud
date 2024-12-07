@@ -43,7 +43,7 @@
 #define EVENT_VERSION                              "1.0"
 #define TOPIC_METHOD_NAME_MAX_SIZE                 16
 
-#ifdef CONFIG_AUTH_MODE_CERT
+#if (CONFIG_AUTH_MODE_CERT || CONFIG_QCLOUD_SERVER_CERT)
 extern const uint8_t qcloud_root_cert_crt_start[] asm("_binary_qcloud_root_cert_crt_start");
 extern const uint8_t qcloud_root_cert_crt_end[] asm("_binary_qcloud_root_cert_crt_end");
 #endif
@@ -225,8 +225,14 @@ static esp_err_t esp_qcloud_iothub_config(esp_qcloud_mqtt_config_t *mqtt_cfg)
 
         strcat(mqtt_cfg->password, ";hmacsha256");
 
+#ifdef CONFIG_QCLOUD_SERVER_CERT
+        mqtt_cfg->server_cert = (char *)qcloud_root_cert_crt_start;
+        asprintf(&mqtt_cfg->host, "mqtts://%s.%s:%d", esp_qcloud_get_product_id(),
+                 QCLOUD_IOTHUB_MQTT_DIRECT_DOMAIN, QCLOUD_IOTHUB_MQTT_SERVER_PORT_TLS);
+#else
         asprintf(&mqtt_cfg->host, "mqtt://%s.%s:%d", esp_qcloud_get_product_id(),
                  QCLOUD_IOTHUB_MQTT_DIRECT_DOMAIN, QCLOUD_IOTHUB_MQTT_SERVER_PORT_NOTLS);
+#endif
 
 EXIT:
 

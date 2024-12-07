@@ -32,6 +32,13 @@ menu "ESP QCloud Configuration"
                 bool "CERT"
         endchoice
 
+        config QCLOUD_SERVER_CERT
+            depends on AUTH_MODE_KEY
+            bool "Enable server certificate verification"
+            default y
+            help
+                Enable server certificate verification.
+
         config QCLOUD_PRODUCT_ID
             depends on !QCLOUD_MASS_MANUFACTURE
             string "Product ID"
